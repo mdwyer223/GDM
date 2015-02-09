@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Threading;
+using System.Text;
 using System.Net.Sockets;
 
 using Microsoft.Xna.Framework;
@@ -41,6 +42,8 @@ namespace Solo
             get { return spriteBatch; }
         }
 
+        static TcpClient clientSocket = new TcpClient();
+
         static GameState mainGameState = GameState.PLAYING;
         public static GameState State
         {
@@ -77,25 +80,48 @@ namespace Solo
             get { return active; }
         }
 
+        static Server server;
+
         public void ReadServer()
         {
+            NetworkStream server = default(NetworkStream);
             while (Game1.Active)
             {
                 try
                 {
-                    TcpClient clientSocket = new TcpClient("127.0.0.1", 34099);
-                    NetworkStream server = default(NetworkStream);
-
                     server = clientSocket.GetStream();
-                    byte[] inStream = new byte[10025];
                     int buffSize = clientSocket.ReceiveBufferSize;
+                    byte[] inStream = new byte[buffSize];
                     server.Read(inStream, 0, buffSize);
-                    passMessage(System.Text.Encoding.ASCII.GetString(inStream));
+                    string returnData = Encoding.ASCII.GetString(inStream);
+                    returnData = returnData.Trim('\0');
+                    passMessage(returnData);
                 }
                 catch (Exception e)
                 {
                     passMessage(e.Message);
                 }
+            }
+        }
+
+        public static void SendMessage()
+        {
+            NetworkStream serverStream = default(NetworkStream);
+            while(Game1.Active)
+            {
+                try
+                {
+                    serverStream = clientSocket.GetStream();
+                    byte[] outStream = Encoding.ASCII.GetBytes("Hey");
+                    serverStream.Write(outStream, 0, outStream.Length);
+                    serverStream.Flush();
+                }
+                catch (Exception e)
+                {
+                    passMessage(e.Message);
+                }
+
+                Thread.Sleep(16);
             }
         }
 
@@ -110,6 +136,8 @@ namespace Solo
         protected override void Initialize()
         {
             otherDevice = this.GraphicsDevice;
+            server = new Server();
+            clientSocket = new TcpClient("10.200.177.5", 34099);
             camera = new Camera2D(this);
             Components.Add(camera);
             lights = new LightComponent(this);
@@ -118,6 +146,7 @@ namespace Solo
             Components.Add(sound);
 
             mBox = new MessageBox();
+
 
             Thread tServerRead = new Thread(new ThreadStart(ReadServer));
             tServerRead.Start();

@@ -87,134 +87,140 @@ namespace Solo
                 {
                     if (oldPress != null)
                     {
-                        if (press[i] == oldPress[j])
+                        if (j < oldPress.Length - 1)
                         {
-                            foundCharacter = true;
-                            break;
+                            if (press[i] == oldPress[j])
+                            {
+                                foundCharacter = true;
+                                break;
+                            }
                         }
                     }
                 }
                 if (foundCharacter == false)
                 {
-                    switch (press[i])
+                    if (i < press.Length - 1)
                     {
-                        case Keys.D0:
-                            keyString = "0";
-                            break;
-                        case Keys.D1:
-                            keyString = "1";
-                            break;
-                        case Keys.D2:
-                            keyString = "2";
-                            break;
-                        case Keys.D3:
-                            keyString = "3";
-                            break;
-                        case Keys.D4:
-                            keyString = "4";
-                            break;
-                        case Keys.D5:
-                            keyString = "5";
-                            break;
-                        case Keys.D6:
-                            keyString = "6";
-                            break;
-                        case Keys.D7:
-                            keyString = "7";
-                            break;
-                        case Keys.D8:
-                            keyString = "8";
-                            break;
-                        case Keys.D9:
-                            keyString = "9";
-                            break;
-                        case Keys.A:
-                            keyString = "A";
-                            break;
-                        case Keys.B:
-                            keyString = "B";
-                            break;
-                        case Keys.C:
-                            keyString = "C";
-                            break;
-                        case Keys.D:
-                            keyString = "D";
-                            break;
-                        case Keys.E:
-                            keyString = "E";
-                            break;
-                        case Keys.F:
-                            keyString = "F";
-                            break;
-                        case Keys.G:
-                            keyString = "G";
-                            break;
-                        case Keys.H:
-                            keyString = "H";
-                            break;
-                        case Keys.I:
-                            keyString = "I";
-                            break;
-                        case Keys.J:
-                            keyString = "J";
-                            break;
-                        case Keys.K:
-                            keyString = "K";
-                            break;
-                        case Keys.L:
-                            keyString = "L";
-                            break;
-                        case Keys.M:
-                            keyString = "M";
-                            break;
-                        case Keys.N:
-                            keyString = "N";
-                            break;
-                        case Keys.O:
-                            keyString = "O";
-                            break;
-                        case Keys.P:
-                            keyString = "P";
-                            break;
-                        case Keys.Q:
-                            keyString = "Q";
-                            break;
-                        case Keys.R:
-                            keyString = "R";
-                            break;
-                        case Keys.S:
-                            keyString = "S";
-                            break;
-                        case Keys.T:
-                            keyString = "T";
-                            break;
-                        case Keys.U:
-                            keyString = "U";
-                            break;
-                        case Keys.W:
-                            keyString = "W";
-                            break;
-                        case Keys.V:
-                            keyString = "V";
-                            break;
-                        case Keys.X:
-                            keyString = "X";
-                            break;
-                        case Keys.Y:
-                            keyString = "Y";
-                            break;
-                        case Keys.Z:
-                            keyString = "Z";
-                            break;
-                        case Keys.Space:
-                            keyString = " ";
-                            break;
-                        case Keys.OemComma:
-                            keyString = ",";
-                            break;
-                        case Keys.OemPeriod:
-                            keyString = ".";
-                            break;
+                        switch (press[i])
+                        {
+                            case Keys.D0:
+                                keyString = "0";
+                                break;
+                            case Keys.D1:
+                                keyString = "1";
+                                break;
+                            case Keys.D2:
+                                keyString = "2";
+                                break;
+                            case Keys.D3:
+                                keyString = "3";
+                                break;
+                            case Keys.D4:
+                                keyString = "4";
+                                break;
+                            case Keys.D5:
+                                keyString = "5";
+                                break;
+                            case Keys.D6:
+                                keyString = "6";
+                                break;
+                            case Keys.D7:
+                                keyString = "7";
+                                break;
+                            case Keys.D8:
+                                keyString = "8";
+                                break;
+                            case Keys.D9:
+                                keyString = "9";
+                                break;
+                            case Keys.A:
+                                keyString = "A";
+                                break;
+                            case Keys.B:
+                                keyString = "B";
+                                break;
+                            case Keys.C:
+                                keyString = "C";
+                                break;
+                            case Keys.D:
+                                keyString = "D";
+                                break;
+                            case Keys.E:
+                                keyString = "E";
+                                break;
+                            case Keys.F:
+                                keyString = "F";
+                                break;
+                            case Keys.G:
+                                keyString = "G";
+                                break;
+                            case Keys.H:
+                                keyString = "H";
+                                break;
+                            case Keys.I:
+                                keyString = "I";
+                                break;
+                            case Keys.J:
+                                keyString = "J";
+                                break;
+                            case Keys.K:
+                                keyString = "K";
+                                break;
+                            case Keys.L:
+                                keyString = "L";
+                                break;
+                            case Keys.M:
+                                keyString = "M";
+                                break;
+                            case Keys.N:
+                                keyString = "N";
+                                break;
+                            case Keys.O:
+                                keyString = "O";
+                                break;
+                            case Keys.P:
+                                keyString = "P";
+                                break;
+                            case Keys.Q:
+                                keyString = "Q";
+                                break;
+                            case Keys.R:
+                                keyString = "R";
+                                break;
+                            case Keys.S:
+                                keyString = "S";
+                                break;
+                            case Keys.T:
+                                keyString = "T";
+                                break;
+                            case Keys.U:
+                                keyString = "U";
+                                break;
+                            case Keys.W:
+                                keyString = "W";
+                                break;
+                            case Keys.V:
+                                keyString = "V";
+                                break;
+                            case Keys.X:
+                                keyString = "X";
+                                break;
+                            case Keys.Y:
+                                keyString = "Y";
+                                break;
+                            case Keys.Z:
+                                keyString = "Z";
+                                break;
+                            case Keys.Space:
+                                keyString = " ";
+                                break;
+                            case Keys.OemComma:
+                                keyString = ",";
+                                break;
+                            case Keys.OemPeriod:
+                                keyString = ".";
+                                break;
+                        }
                     }
                     if (keys.IsKeyUp(Keys.LeftShift) && keys.IsKeyUp(Keys.RightShift))
                     {

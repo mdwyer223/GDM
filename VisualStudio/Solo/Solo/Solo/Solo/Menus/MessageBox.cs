@@ -123,8 +123,9 @@ namespace Solo
             if (Visible)
             {
                 spriteBatch.Draw(text, rec, Color.White);
+                
                 spriteBatch.DrawString(Fonts.Normal, message, new Vector2(rec.X, rec.Y), Color.White);
-
+                
                 foreach (MessageOption op in options)
                     op.draw(spriteBatch);
             }
