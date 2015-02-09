@@ -71,7 +71,6 @@ namespace Solo
         public static Viewport View
         {
             get { return otherDevice.Viewport; }
-
         }
 
         static bool active = true;
@@ -81,49 +80,12 @@ namespace Solo
         }
 
         static Server server;
-
-        public void ReadServer()
+        public static Server CurrentServer
         {
-            NetworkStream server = default(NetworkStream);
-            while (Game1.Active)
-            {
-                try
-                {
-                    server = clientSocket.GetStream();
-                    int buffSize = clientSocket.ReceiveBufferSize;
-                    byte[] inStream = new byte[buffSize];
-                    server.Read(inStream, 0, buffSize);
-                    string returnData = Encoding.ASCII.GetString(inStream);
-                    returnData = returnData.Trim('\0');
-                    passMessage(returnData);
-                }
-                catch (Exception e)
-                {
-                    passMessage(e.Message);
-                }
-            }
+            get { return server; }
         }
 
-        public static void SendMessage()
-        {
-            NetworkStream serverStream = default(NetworkStream);
-            while(Game1.Active)
-            {
-                try
-                {
-                    serverStream = clientSocket.GetStream();
-                    byte[] outStream = Encoding.ASCII.GetBytes("Hey");
-                    serverStream.Write(outStream, 0, outStream.Length);
-                    serverStream.Flush();
-                }
-                catch (Exception e)
-                {
-                    passMessage(e.Message);
-                }
-
-                Thread.Sleep(16);
-            }
-        }
+        BasePlayer p;
 
         public Game1()
         {
@@ -136,8 +98,14 @@ namespace Solo
         protected override void Initialize()
         {
             otherDevice = this.GraphicsDevice;
-            server = new Server();
-            clientSocket = new TcpClient("10.200.177.5", 34099);
+            //server = new Server();
+            try
+            {
+                //clientSocket = new TcpClient("10.200.177.5", 34099);
+            }
+            catch (Exception e)
+            {
+            }
             camera = new Camera2D(this);
             Components.Add(camera);
             lights = new LightComponent(this);
@@ -147,10 +115,11 @@ namespace Solo
 
             mBox = new MessageBox();
 
-
             Thread tServerRead = new Thread(new ThreadStart(ReadServer));
-            tServerRead.Start();
+            //tServerRead.Start();
             base.Initialize();
+
+            p = new BasePlayer(Image.Particle, .07f, Vector2.Zero);
         }
 
         protected override void LoadContent()
@@ -169,10 +138,14 @@ namespace Solo
         {
             Input.Update();
 
+            if (Input.actionBarPressed())
+                hideMessage();
+
             Game1.Camera.Focus = Vector2.Zero;
             Game1.Camera.MoveSpeed = 0;
 
             mBox.update(gameTime);
+            p.update(gameTime);
 
             base.Update(gameTime);
         }
@@ -186,6 +159,8 @@ namespace Solo
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp,
                 DepthStencilState.Default, rs, null, Game1.Camera.Transform);
+
+            p.draw(spriteBatch);
 
             spriteBatch.End();
 
@@ -221,6 +196,49 @@ namespace Solo
         public static void changeActive()
         {
             active = !active;
-        } 
+        }
+
+        public void ReadServer()
+        {
+            NetworkStream server = default(NetworkStream);
+            while (Game1.Active)
+            {
+                try
+                {
+                    server = clientSocket.GetStream();
+                    int buffSize = clientSocket.ReceiveBufferSize;
+                    byte[] inStream = new byte[buffSize];
+                    server.Read(inStream, 0, buffSize);
+                    string returnData = Encoding.ASCII.GetString(inStream);
+                    returnData = returnData.Trim('\0');
+                    passMessage(returnData);
+                }
+                catch (Exception e)
+                {
+                    passMessage(e.Message);
+                }
+            }
+        }
+
+        public static void SendMessage()
+        {
+            NetworkStream serverStream = default(NetworkStream);
+            while (Game1.Active)
+            {
+                try
+                {
+                    serverStream = clientSocket.GetStream();
+                    byte[] outStream = Encoding.ASCII.GetBytes("Hey");
+                    serverStream.Write(outStream, 0, outStream.Length);
+                    serverStream.Flush();
+                }
+                catch (Exception e)
+                {
+                    passMessage(e.Message);
+                }
+
+                Thread.Sleep(16);
+            }
+        }
     }
 }
