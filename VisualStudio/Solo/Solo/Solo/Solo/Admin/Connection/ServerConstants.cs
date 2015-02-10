@@ -7,7 +7,7 @@ namespace Solo
 {
     public static class ServerConstants
     {
-        public const string IP = "10.200.177.5";
+        public const string IP = "68.193.136.220";
         public const int PORT = 34099;
         public const string PASS = "";
     }

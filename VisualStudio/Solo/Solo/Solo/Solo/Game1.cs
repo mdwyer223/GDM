@@ -24,6 +24,9 @@ namespace Solo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        static string message = "";
+        static List<byte> coordinates = new List<byte>();
+
         public static MessageBox mBox
         {
             get;
@@ -33,7 +36,6 @@ namespace Solo
         Vector2 testPos = new Vector2(400, 240);
         Lightmap map;
         SoundComponent sound;
-        bool lookingUp = false;
 
         LightComponent lights;
 
@@ -101,7 +103,7 @@ namespace Solo
             //server = new Server();
             try
             {
-                //clientSocket = new TcpClient("10.200.177.5", 34099);
+                clientSocket = new TcpClient(ServerConstants.IP, ServerConstants.PORT);
             }
             catch (Exception e)
             {
@@ -116,10 +118,12 @@ namespace Solo
             mBox = new MessageBox();
 
             Thread tServerRead = new Thread(new ThreadStart(ReadServer));
-            //tServerRead.Start();
+            tServerRead.Start();
+            //Thread tServerWrite = new Thread(new ThreadStart(SendMessage));
+            //tServerWrite.Start();
             base.Initialize();
 
-            p = new BasePlayer(Image.Particle, .07f, Vector2.Zero);
+            p = new BasePlayer(Image.Fighter, .07f, Vector2.Zero);
         }
 
         protected override void LoadContent()
@@ -141,8 +145,10 @@ namespace Solo
             if (Input.actionBarPressed())
                 hideMessage();
 
-            Game1.Camera.Focus = Vector2.Zero;
-            Game1.Camera.MoveSpeed = 0;
+            message += Input.getRecentKeys();
+
+            Game1.Camera.Focus = new Vector2(p.Rec.Center.X, p.Rec.Center.Y);
+            Game1.Camera.MoveSpeed = p.Speed;
 
             mBox.update(gameTime);
             p.update(gameTime);
@@ -159,6 +165,11 @@ namespace Solo
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp,
                 DepthStencilState.Default, rs, null, Game1.Camera.Transform);
+
+            spriteBatch.Draw(Image.Particle, new Rectangle(0, 0, 420, 240), Color.Red);
+            if(coordinates.Count >= 2)
+                spriteBatch.DrawString(Fonts.Normal, "Here", new Vector2(coordinates[coordinates.Count - 2], 
+                    coordinates[coordinates.Count - 1]), Color.White);
 
             p.draw(spriteBatch);
 
@@ -201,6 +212,7 @@ namespace Solo
         public void ReadServer()
         {
             NetworkStream server = default(NetworkStream);
+            string returnData = "";
             while (Game1.Active)
             {
                 try
@@ -209,14 +221,24 @@ namespace Solo
                     int buffSize = clientSocket.ReceiveBufferSize;
                     byte[] inStream = new byte[buffSize];
                     server.Read(inStream, 0, buffSize);
-                    string returnData = Encoding.ASCII.GetString(inStream);
+                    returnData += Encoding.ASCII.GetString(inStream);
+                    message = Encoding.ASCII.GetString(inStream);
+                    message = message.Trim('\0');
                     returnData = returnData.Trim('\0');
-                    passMessage(returnData);
+                    message = message.Replace("\"", "");
+                    try
+                    {
+                       
+                    }
+                    catch (Exception e)
+                    { }
+                    int l = message.Length;
                 }
                 catch (Exception e)
                 {
                     passMessage(e.Message);
                 }
+                Thread.Sleep(16);
             }
         }
 
@@ -228,7 +250,7 @@ namespace Solo
                 try
                 {
                     serverStream = clientSocket.GetStream();
-                    byte[] outStream = Encoding.ASCII.GetBytes("Hey");
+                    byte[] outStream = Encoding.ASCII.GetBytes(message);
                     serverStream.Write(outStream, 0, outStream.Length);
                     serverStream.Flush();
                 }
@@ -237,7 +259,7 @@ namespace Solo
                     passMessage(e.Message);
                 }
 
-                Thread.Sleep(16);
+                Thread.Sleep(5000);
             }
         }
     }

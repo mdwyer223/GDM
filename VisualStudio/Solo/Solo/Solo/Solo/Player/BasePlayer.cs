@@ -12,10 +12,10 @@ namespace Solo
     public class BasePlayer : AnimatedSprite
     {
         protected float angle;
-        private int turnRadius = 20;
+        private int turnRadius = 10;
 
         public BasePlayer(Texture2D texture, float scaleFactor, Vector2 start) :
-            base(texture, scaleFactor, 3f, start)
+            base(texture, scaleFactor, 1.0f, start)
         {
             velocity = new Vector2(Speed, 0);
         }
@@ -37,8 +37,14 @@ namespace Solo
 
             velocity = new Vector2(Speed * (float)Math.Cos(angle), Speed * (float)Math.Sin(angle));
 
-            this.Position += velocity;
+            //this.Position += velocity;
             base.update(gameTime);
+        }
+
+        public override void draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(this.texture, this.Position, null, Color.White, angle,
+                new Vector2(texture.Width/2,texture.Height/2), 1f,SpriteEffects.None, 0f);
         }
     }
 }

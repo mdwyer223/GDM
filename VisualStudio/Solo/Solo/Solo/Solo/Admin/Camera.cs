@@ -149,7 +149,7 @@ namespace Solo
             ChangeInY = (Focus.Y - Position.Y) * MoveSpeed * delta;
 
             Rotation += 0f;
-            Scale = .5f;
+            Scale = .25f;
 
             base.Update(gameTime);
         }
